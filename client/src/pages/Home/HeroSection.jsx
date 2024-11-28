@@ -1,0 +1,25 @@
+import { cover } from "../../assets/assets.js";
+
+const HeroSection = () => {
+  return (
+    <>
+      <div className="w-full h-40 relative">
+        <img
+          src={cover}
+          alt="Hero image"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute top-0 left-0 w-full h-full bg-indigo-300 opacity-50"></div>
+      </div>
+      <div className="p-5">
+        <div className="md:px-0 md:max-w-5xl mx-auto">
+          <h1 className="text-2xl font-medium">
+            Share Stories, Rate Reads, Discover Your Next Favorite Book
+          </h1>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default HeroSection;
