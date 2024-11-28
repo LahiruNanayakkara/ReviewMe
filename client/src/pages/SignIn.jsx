@@ -34,6 +34,7 @@ const SignIn = () => {
                 type="email"
                 name="email"
                 id="email"
+                required
                 onChange={(e) => {
                   setFormdata({ ...formdata, email: e.target.value });
                 }}
@@ -62,6 +63,7 @@ const SignIn = () => {
                 type={showPassword ? "text" : "password"}
                 name="password"
                 id="password"
+                required
                 onChange={(e) => {
                   setFormdata({ ...formdata, password: e.target.value });
                 }}

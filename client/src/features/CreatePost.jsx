@@ -41,6 +41,7 @@ const CreatePost = () => {
 
   useEffect(() => {
     setFormdata({ ...formdata, rating: selectedRate });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRate]);
 
   return (
