@@ -1,11 +1,11 @@
-import { cover } from "../../assets/assets.js";
+import { hero } from "../../assets/assets.js";
 
 const HeroSection = () => {
   return (
     <>
-      <div className="w-full h-40 relative">
+      <div className="w-full h-60 relative">
         <img
-          src={cover}
+          src={hero}
           alt="Hero image"
           className="w-full h-full object-cover object-center"
         />

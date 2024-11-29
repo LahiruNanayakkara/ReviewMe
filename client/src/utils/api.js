@@ -44,7 +44,7 @@ export const createReview = async (review) => {
 // Get reviews API
 export const getReviews = async (query) => {
   return await fetch(
-    `/api/review/getReviews?sortField=${query.key}&&sortDirection=${query.value}`,
+    `/api/review/getReviews?sortField=${query.sortField}&&sortDirection=${query.sortDirection}&&startIndex=${query.startIndex}&&pageSize=${query.pageSize}&&userId=${query.userId}&&title=${query.title}&&author=${query.author}&&searchTerm=${query.searchTerm}`,
     {
       method: "GET",
       headers: {

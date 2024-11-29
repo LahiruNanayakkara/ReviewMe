@@ -8,6 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useDispatch, useSelector } from "react-redux";
 import { setReviews } from "../state/review/reviewSlice.js";
 import { FiFilter, FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const override = {
   display: "block",
@@ -18,12 +19,19 @@ const override = {
 const ReviewList = () => {
   const [selectedTab, setSelectedTab] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [filterQuery, setFilterQuery] = useState({
-    key: "",
-    value: "",
+    sortField: "",
+    sortDirection: "",
+    startIndex: 0,
+    pageSize: 10,
+    userId: "",
+    title: "",
+    author: "",
+    searchTerm: "",
   });
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { reviews } = useSelector((state) => state.review);
   const { currentUser } = useSelector((state) => state.user);
 
@@ -31,7 +39,6 @@ const ReviewList = () => {
     setLoading(true);
     try {
       const res = await getReviews(query);
-
       const data = await res.json();
 
       if (res.ok) {
@@ -52,8 +59,16 @@ const ReviewList = () => {
   }, []);
 
   useEffect(() => {
+    console.log(filterQuery);
     getReviewsAsync(filterQuery);
   }, [filterQuery]);
+
+  const handleSearch = () => {
+    console.log(searchTerm);
+    if (searchTerm) {
+      navigate(`/search?searchTerm=${searchTerm}`);
+    }
+  };
 
   return (
     <div>
@@ -65,8 +80,14 @@ const ReviewList = () => {
                 type="text"
                 className="border rounded px-4 w-full"
                 placeholder="Book Title, Author..."
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button className="py-3 px-6 flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all">
+              <button
+                className="py-3 px-6 flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all"
+                onClick={() => {
+                  handleSearch();
+                }}
+              >
                 <FiSearch />
                 Search
               </button>
@@ -87,36 +108,33 @@ const ReviewList = () => {
                 <MdOutlineWhatshot />
                 All ({reviews.length})
               </button>
-              {/* <button
-                className={
-                  selectedTab === "latest"
-                    ? `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-indigo-100 border-b-4 border-indigo-500  text-gray rounded transition-all`
-                    : `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 hover:border-gray-200 border-b-4 border-gray-100  text-gray rounded transition-all`
-                }
-                onClick={() => {
-                  setSelectedTab("latest");
-                }}
-              >
-                <MdOutlineWhatshot />
-                Latest
-              </button> */}
-              <button
-                className={
-                  selectedTab === "my-reviews"
-                    ? `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-indigo-100 border-b-4 border-indigo-500  text-gray rounded transition-all`
-                    : `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 hover:border-gray-200 border-b-4 border-gray-100  text-gray rounded transition-all`
-                }
-                onClick={() => {
-                  setSelectedTab("my-reviews");
-                }}
-              >
-                <BiCommentDetail />
-                My Reviews
-              </button>
+
+              {currentUser && (
+                <button
+                  className={
+                    selectedTab === "my-reviews"
+                      ? `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-indigo-100 border-b-4 border-indigo-500  text-gray rounded transition-all`
+                      : `py-3 px-6 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 hover:border-gray-200 border-b-4 border-gray-100  text-gray rounded transition-all`
+                  }
+                  onClick={() => {
+                    setSelectedTab("my-reviews");
+                  }}
+                >
+                  <BiCommentDetail />
+                  My Reviews
+                </button>
+              )}
             </div>
             <div className="flex items-center gap-4">
-              <div>
-                <Menu as="div" className="relative inline-block text-left">
+              <div
+                className="relative"
+                style={{ position: "relative", zIndex: "1" }}
+              >
+                <Menu
+                  as="div"
+                  className=" inline-block text-left"
+                  style={{ position: "relative", zIndex: "1" }}
+                >
                   <div>
                     <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white p-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                       <FiFilter />
@@ -129,7 +147,18 @@ const ReviewList = () => {
                   >
                     <div className="py-1">
                       <MenuItem
-                        onClick={() => setFilterQuery({ key: "", value: "" })}
+                        onClick={() =>
+                          setFilterQuery({
+                            sortDirection: "",
+                            sortField: "",
+                            searchTerm: "",
+                            author: "",
+                            title: "",
+                            pageSize: 10,
+                            startIndex: 0,
+                            userId: "",
+                          })
+                        }
                       >
                         <span className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none">
                           None
@@ -138,7 +167,16 @@ const ReviewList = () => {
                       <hr />
                       <MenuItem
                         onClick={() =>
-                          setFilterQuery({ key: "rating", value: "asc" })
+                          setFilterQuery({
+                            sortField: "rating",
+                            sortDirection: "asc",
+                            searchTerm: "",
+                            author: "",
+                            title: "",
+                            pageSize: 10,
+                            startIndex: 0,
+                            userId: "",
+                          })
                         }
                       >
                         <span className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none">
@@ -147,7 +185,16 @@ const ReviewList = () => {
                       </MenuItem>
                       <MenuItem
                         onClick={() =>
-                          setFilterQuery({ key: "rating", value: "desc" })
+                          setFilterQuery({
+                            sortField: "rating",
+                            sortDirection: "desc",
+                            searchTerm: "",
+                            author: "",
+                            title: "",
+                            pageSize: 10,
+                            startIndex: 0,
+                            userId: "",
+                          })
                         }
                       >
                         <span className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none">
@@ -157,7 +204,16 @@ const ReviewList = () => {
                       <hr />
                       <MenuItem
                         onClick={() =>
-                          setFilterQuery({ key: "createdAt", value: "desc" })
+                          setFilterQuery({
+                            sortField: "createdAt",
+                            sortDirection: "desc",
+                            searchTerm: "",
+                            author: "",
+                            title: "",
+                            pageSize: 10,
+                            startIndex: 0,
+                            userId: "",
+                          })
                         }
                       >
                         <span className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none">
@@ -166,7 +222,16 @@ const ReviewList = () => {
                       </MenuItem>
                       <MenuItem
                         onClick={() =>
-                          setFilterQuery({ key: "createdAt", value: "asc" })
+                          setFilterQuery({
+                            sortField: "createdAt",
+                            sortDirection: "asc",
+                            searchTerm: "",
+                            author: "",
+                            title: "",
+                            pageSize: 10,
+                            startIndex: 0,
+                            userId: "",
+                          })
                         }
                       >
                         <span className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none">
@@ -182,8 +247,12 @@ const ReviewList = () => {
                   type="text"
                   className="border rounded px-4"
                   placeholder="Book Title, Author..."
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button className="py-3 px-6 flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all">
+                <button
+                  className="py-3 px-6 flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all"
+                  onClick={handleSearch}
+                >
                   <FiSearch />
                   Search
                 </button>
