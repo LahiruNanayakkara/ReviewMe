@@ -11,7 +11,7 @@ const HeroSection = () => {
         />
         <div className="absolute top-0 left-0 w-full h-full bg-indigo-300 opacity-50"></div>
       </div>
-      <div className="p-5">
+      <div className="p-5 pb-0">
         <div className="md:px-0 md:max-w-5xl mx-auto">
           <h1 className="text-2xl font-medium">
             Share Stories, Rate Reads, Discover Your Next Favorite Book

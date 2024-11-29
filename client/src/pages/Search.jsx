@@ -38,8 +38,8 @@ const Search = () => {
         const res = await getReviews(query);
         const data = await res.json();
         if (res.ok) {
-          setLoading(false);
           setReviews(data.data);
+          setLoading(false);
         } else {
           setLoading(false);
         }
@@ -49,12 +49,14 @@ const Search = () => {
       }
     };
     fetchReviews();
-  }, [query]);
+  }, []);
 
   return (
     <div className="w-full p-5 h-full">
       <div className="md:max-w-5xl mx-auto">
-    <h1 className="text-2xl font-medium mb-4">Search Result ({reviews.length})</h1>
+        <h1 className="text-2xl font-medium mb-4">
+          Search Result ({!loading && reviews.length})
+        </h1>
         {loading && (
           <div className="w-full h-80 flex items-center justify-center">
             <ClipLoader
@@ -73,9 +75,11 @@ const Search = () => {
             return <ReviewCard key={review._id} review={review} />;
           })}
 
-          {
-            !loading && reviews.length === 0 && <h1 className="text-center text-gray-500 text-2xl my-52">No Reviews Found</h1>
-          }
+        {!loading && reviews.length === 0 && (
+          <h1 className="text-center text-gray-500 text-2xl my-52">
+            No Reviews Found
+          </h1>
+        )}
       </div>
     </div>
   );
