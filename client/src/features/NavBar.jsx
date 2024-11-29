@@ -36,9 +36,9 @@ const NavBar = () => {
           <div>
             {currentUser ? (
               <div className="flex items-center gap-4">
-                <div className="flex flex-col gap-0">
-                  <p className="text-sm">Hello,</p>
-                  <p className="">{currentUser.firstName}</p>
+                <div className="bg-orange-100 p-2.5 rounded-lg">
+                  {currentUser.firstName.charAt(0)}
+                  {currentUser.lastName.charAt(0)}
                 </div>
                 <button
                   className="py-2 px-6 border border-indigo-500 hover:bg-indigo-600 text-indigo-500 hover:text-white rounded transition-all"

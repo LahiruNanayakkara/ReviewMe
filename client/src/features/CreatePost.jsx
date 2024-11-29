@@ -12,6 +12,8 @@ const CreatePost = () => {
   const [selectedRate, setSelectedRate] = useState(0);
   const [formSubmitError, setFormSubmitError] = useState(null);
 
+  const { currentUser } = useSelector((state) => state.user);
+
   const [formdata, setFormdata] = useState({
     title: "",
     author: "",
@@ -54,7 +56,16 @@ const CreatePost = () => {
     <div className="p-5 pt-0">
       <div className="md:max-w-5xl mx-auto">
         <div className="flex items-center gap-5 p-5 border rounded">
-          <HiOutlineUserCircle color="gray" size={56} />
+          {currentUser ? (
+            <div className="bg-orange-100 p-3.5 rounded">
+            {currentUser.firstName.charAt(0)}
+            {currentUser.lastName.charAt(0)}
+            </div>
+          ) : (
+            <>
+              <HiOutlineUserCircle color="gray" size={56} />
+            </>
+          )}
           <button
             className="py-3 px-6 w-full bg-gray-100 hover:bg-gray-200 border border-gray-300  text-gray rounded transition-all"
             onClick={() => setOpen(true)}
@@ -67,115 +78,127 @@ const CreatePost = () => {
       {/* Create review popup */}
       <Modal open={open} onClose={() => setOpen(false)}>
         <h1 className="text-2xl font-semibold mb-2">Create Review</h1>
-        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-          <div className="space-y-1">
-            <label htmlFor="title">
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="border rounded px-4 py-2 w-full"
-              id="title"
-              placeholder="Book Title"
-              onChange={(e) =>
-                setFormdata({ ...formdata, title: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="author">
-              Author <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="border rounded px-4 py-2 w-full"
-              id="author"
-              placeholder="Book Author"
-              onChange={(e) =>
-                setFormdata({ ...formdata, author: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="reviewText">
-              Rate <span className="text-red-500">*</span>
-            </label>
-            <div className="flex justify-between px-4">
-              <FaStar
-                size={20}
-                className={
-                  selectedRate >= 1
-                    ? "text-indigo-500 cursor-pointer"
-                    : `text-indigo-200 cursor-pointer`
+        {currentUser ? (
+          <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+            <div className="space-y-1">
+              <label htmlFor="title">
+                Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                className="border rounded px-4 py-2 w-full"
+                id="title"
+                placeholder="Book Title"
+                onChange={(e) =>
+                  setFormdata({ ...formdata, title: e.target.value })
                 }
-                onClick={() => setSelectedRate(1)}
-              />
-              <FaStar
-                size={20}
-                className={
-                  selectedRate >= 2
-                    ? "text-indigo-500 cursor-pointer"
-                    : `text-indigo-200 cursor-pointer`
-                }
-                onClick={() => setSelectedRate(2)}
-              />
-              <FaStar
-                size={20}
-                className={
-                  selectedRate >= 3
-                    ? "text-indigo-500 cursor-pointer"
-                    : `text-indigo-200 cursor-pointer`
-                }
-                onClick={() => setSelectedRate(3)}
-              />
-              <FaStar
-                size={20}
-                className={
-                  selectedRate >= 4
-                    ? "text-indigo-500 cursor-pointer"
-                    : `text-indigo-200 cursor-pointer`
-                }
-                onClick={() => setSelectedRate(4)}
-              />
-              <FaStar
-                size={20}
-                className={
-                  selectedRate >= 5
-                    ? "text-indigo-500 cursor-pointer"
-                    : `text-indigo-200 cursor-pointer`
-                }
-                onClick={() => setSelectedRate(5)}
+                required
               />
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label htmlFor="reviewText">
-              Add your review <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              type="text"
-              className="border rounded px-4 py-2 w-full"
-              id="reviewText"
-              placeholder="write your review"
-              onChange={(e) =>
-                setFormdata({ ...formdata, reviewText: e.target.value })
-              }
-              required
-              rows={5}
-            />
+            <div className="space-y-1">
+              <label htmlFor="author">
+                Author <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                className="border rounded px-4 py-2 w-full"
+                id="author"
+                placeholder="Book Author"
+                onChange={(e) =>
+                  setFormdata({ ...formdata, author: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="reviewText">
+                Rate <span className="text-red-500">*</span>
+              </label>
+              <div className="flex justify-between px-4">
+                <FaStar
+                  size={20}
+                  className={
+                    selectedRate >= 1
+                      ? "text-indigo-500 cursor-pointer"
+                      : `text-indigo-200 cursor-pointer`
+                  }
+                  onClick={() => setSelectedRate(1)}
+                />
+                <FaStar
+                  size={20}
+                  className={
+                    selectedRate >= 2
+                      ? "text-indigo-500 cursor-pointer"
+                      : `text-indigo-200 cursor-pointer`
+                  }
+                  onClick={() => setSelectedRate(2)}
+                />
+                <FaStar
+                  size={20}
+                  className={
+                    selectedRate >= 3
+                      ? "text-indigo-500 cursor-pointer"
+                      : `text-indigo-200 cursor-pointer`
+                  }
+                  onClick={() => setSelectedRate(3)}
+                />
+                <FaStar
+                  size={20}
+                  className={
+                    selectedRate >= 4
+                      ? "text-indigo-500 cursor-pointer"
+                      : `text-indigo-200 cursor-pointer`
+                  }
+                  onClick={() => setSelectedRate(4)}
+                />
+                <FaStar
+                  size={20}
+                  className={
+                    selectedRate >= 5
+                      ? "text-indigo-500 cursor-pointer"
+                      : `text-indigo-200 cursor-pointer`
+                  }
+                  onClick={() => setSelectedRate(5)}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="reviewText">
+                Add your review <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                type="text"
+                className="border rounded px-4 py-2 w-full"
+                id="reviewText"
+                placeholder="write your review"
+                onChange={(e) =>
+                  setFormdata({ ...formdata, reviewText: e.target.value })
+                }
+                required
+                rows={5}
+              />
+            </div>
+            <button
+              type="submit"
+              className="py-3 px-6 text-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all"
+            >
+              Publish
+            </button>
+          </form>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <p className="text-center">Please sign in to create a review</p>
+            <button
+              className="py-3 px-6 text-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all"
+              onClick={() => setOpen(false)}
+            >
+              Close
+            </button>
           </div>
-          <button
-            type="submit"
-            className="py-3 px-6 text-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all"
-          >
-            Publish
-          </button>
-        </form>
+        )}
       </Modal>
     </div>
   );
