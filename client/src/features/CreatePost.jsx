@@ -23,6 +23,17 @@ const CreatePost = () => {
 
   const dispatch = useDispatch();
   const { reviews } = useSelector((state) => state.review);
+
+  const resetForm = () => {
+    setFormdata({
+      title: "",
+      author: "",
+      rating: 0,
+      reviewText: "",
+    });
+    setSelectedRate(0);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -38,6 +49,7 @@ const CreatePost = () => {
       if (res.ok) {
         displayToastSuccess(data.message);
         dispatch(setReviews([data.data, ...reviews]));
+        resetForm();
         setOpen(false);
       } else {
         displayToastError(data.message);
@@ -58,8 +70,8 @@ const CreatePost = () => {
         <div className="flex items-center gap-5 p-5 border rounded">
           {currentUser ? (
             <div className="bg-orange-100 p-3.5 rounded">
-            {currentUser.firstName.charAt(0)}
-            {currentUser.lastName.charAt(0)}
+              {currentUser.firstName.charAt(0)}
+              {currentUser.lastName.charAt(0)}
             </div>
           ) : (
             <>
@@ -67,7 +79,7 @@ const CreatePost = () => {
             </>
           )}
           <button
-            className="py-3 px-6 w-full bg-gray-100 hover:bg-gray-200 border border-gray-300  text-gray rounded transition-all"
+            className="py-3 px-6 w-full bg-indigo-100 hover:bg-indigo-200 border border-indigo-300  text-gray rounded transition-all"
             onClick={() => setOpen(true)}
           >
             Write a Review...
@@ -89,6 +101,7 @@ const CreatePost = () => {
                 className="border rounded px-4 py-2 w-full"
                 id="title"
                 placeholder="Book Title"
+                value={formdata.title}
                 onChange={(e) =>
                   setFormdata({ ...formdata, title: e.target.value })
                 }
@@ -105,6 +118,7 @@ const CreatePost = () => {
                 className="border rounded px-4 py-2 w-full"
                 id="author"
                 placeholder="Book Author"
+                value={formdata.author}
                 onChange={(e) =>
                   setFormdata({ ...formdata, author: e.target.value })
                 }
@@ -174,6 +188,7 @@ const CreatePost = () => {
                 className="border rounded px-4 py-2 w-full"
                 id="reviewText"
                 placeholder="write your review"
+                value={formdata.reviewText}
                 onChange={(e) =>
                   setFormdata({ ...formdata, reviewText: e.target.value })
                 }
