@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { displayToastError } from "../utils/toasts";
+import { Link, useNavigate } from "react-router-dom";
+import { displayToastError, displayToastSuccess } from "../utils/toasts";
 import { validateEmail, validatePassword } from "../utils/validations";
+import { signUp } from "../utils/api";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +14,9 @@ const SignUp = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Call for email validation
@@ -27,7 +30,20 @@ const SignUp = () => {
       return displayToastError(passwordError);
     }
 
-    console.log(formdata);
+    try {
+      const res = await signUp(formdata);
+
+      const data = await res.json();
+
+      if (res.ok) {
+        displayToastSuccess(data.message);
+        navigate("/sign-in");
+      } else {
+        displayToastError(data.message);
+      }
+    } catch (error) {
+      displayToastError(error.message);
+    }
   };
 
   return (

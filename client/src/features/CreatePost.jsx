@@ -2,7 +2,10 @@ import { HiOutlineUserCircle } from "react-icons/hi2";
 import { FaStar } from "react-icons/fa6";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
-import { Bounce, toast } from "react-toastify";
+import { displayToastError, displayToastSuccess } from "../utils/toasts";
+import { createReview } from "../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setReviews } from "../state/review/reviewSlice";
 
 const CreatePost = () => {
   const [open, setOpen] = useState(false);
@@ -16,32 +19,35 @@ const CreatePost = () => {
     reviewText: "",
   });
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const { reviews } = useSelector((state) => state.review);
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formdata.rating === 0) {
       setFormSubmitError("Please rate the book");
-      toast.error(formSubmitError, {
-        position: "bottom-right",
-        autoClose: 4000,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClickrtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "colored",
-        transition: Bounce,
-      });
+      displayToastError(formSubmitError);
     }
 
-    console.log(selectedRate);
-    console.log(formdata);
+    try {
+      const res = await createReview(formdata);
+      const data = await res.json();
+
+      if (res.ok) {
+        displayToastSuccess(data.message);
+        dispatch(setReviews([data.data, ...reviews]));
+        setOpen(false);
+      } else {
+        displayToastError(data.message);
+      }
+    } catch (error) {
+      displayToastError(error.message);
+    }
   };
 
   useEffect(() => {
     setFormdata({ ...formdata, rating: selectedRate });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRate]);
 
   return (

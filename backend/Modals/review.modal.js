@@ -6,11 +6,6 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    slug: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     author: {
       type: String,
       required: true,
