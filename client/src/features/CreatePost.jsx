@@ -65,7 +65,7 @@ const CreatePost = () => {
   }, [selectedRate]);
 
   return (
-    <div className="p-5 pt-0">
+    <div className="p-5">
       <div className="md:max-w-5xl mx-auto">
         <div className="flex items-center gap-5 p-5 border rounded">
           {currentUser ? (

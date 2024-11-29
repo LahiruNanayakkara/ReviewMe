@@ -136,7 +136,7 @@ const ReviewList = () => {
                   style={{ position: "relative", zIndex: "1" }}
                 >
                   <div>
-                    <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white p-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white p-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 hover:bg-gray-50">
                       <FiFilter />
                     </MenuButton>
                   </div>
