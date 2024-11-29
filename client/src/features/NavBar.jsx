@@ -1,6 +1,29 @@
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { signOut } from "../utils/api";
+import { displayToastError, displayToastSuccess } from "../utils/toasts";
+import { removeCurrentUser } from "../state/user/userSlics";
 
 const NavBar = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSignOut = async () => {
+    try {
+      const res = await signOut();
+      const data = await res.json();
+      if (res.ok) {
+        displayToastSuccess(data.message);
+        dispatch(removeCurrentUser());
+        navigate("/sign-in");
+      } else {
+        displayToastError(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <nav>
       <div className="w-full p-5">
@@ -11,11 +34,26 @@ const NavBar = () => {
             </h1>
           </Link>
           <div>
-            <Link to={"/sign-in"}>
-              <button className="py-2 px-6 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all">
-                Sign In
-              </button>
-            </Link>
+            {currentUser ? (
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-0">
+                  <p className="text-sm">Hello,</p>
+                  <p className="">{currentUser.firstName}</p>
+                </div>
+                <button
+                  className="py-2 px-6 border border-indigo-500 hover:bg-indigo-600 text-indigo-500 hover:text-white rounded transition-all"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link to={"/sign-in"}>
+                <button className="py-2 px-6 bg-indigo-500 hover:bg-indigo-600 text-white rounded transition-all">
+                  Sign In
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

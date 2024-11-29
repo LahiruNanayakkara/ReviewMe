@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { displayToastError } from "../utils/toasts";
+import { Link, useNavigate } from "react-router-dom";
+import { displayToastError, displayToastSuccess } from "../utils/toasts";
 import { validateEmail } from "../utils/validations";
+import { signIn } from "../utils/api";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../state/user/userSlics";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,14 +14,32 @@ const SignIn = () => {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateEmail(formdata.email)) {
       return displayToastError("Please enter a valid email.");
     }
 
-    console.log(formdata);
+    try {
+      const res = await signIn(formdata);
+
+      const data = await res.json();
+
+      if (res.ok) {
+        displayToastSuccess(data.message);
+        dispatch(setCurrentUser(data.data));
+        console.log(data.data);
+        navigate("/");
+      } else {
+        displayToastError(data.message);
+      }
+    } catch (error) {
+      displayToastError(error.message);
+    }
   };
 
   return (
